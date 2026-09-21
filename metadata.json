@@ -1,0 +1,6 @@
+{
+  "name": "BC7 Texture Compression Inspector",
+  "description": "An interactive, deep-dive educational tool for analyzing, visualising, and understanding the BC7 texture compression algorithm used in modern real-time graphics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
