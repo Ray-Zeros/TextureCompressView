@@ -1,7 +1,7 @@
 import React from "react";
 import { Cpu, Eye, Grid, Sliders, Layers } from "lucide-react";
 
-export type ViewTab = "inspector" | "matrix" | "sandbox" | "astc";
+export type ViewTab = "inspector" | "matrix" | "sandbox";
 
 interface NavbarProps {
   activeTab: ViewTab;
@@ -12,8 +12,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
   const tabs: Array<{ id: ViewTab; label: string; icon: React.FC<{ className?: string }> }> = [
     { id: "inspector", label: "4x4 块比特剖析", icon: Eye },
     { id: "matrix", label: "Mode 与 Partition 矩阵", icon: Grid },
-    { id: "sandbox", label: "128-bit 二进制沙盒", icon: Sliders },
-    { id: "astc", label: "ASTC 128-bit 沙盒", icon: Layers },
+    { id: "sandbox", label: "128-bit 算法沙盒 (BC7 / ASTC)", icon: Sliders },
   ];
 
   return (

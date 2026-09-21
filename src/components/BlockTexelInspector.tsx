@@ -2,11 +2,9 @@ import React, { useState, useMemo } from "react";
 import { decodeBC7Block, BitField, DecodedBC7Block } from "../lib/bc7/bc7Decoder";
 import { encodeBC7Block } from "../lib/bc7/bc7Encoder";
 import { BC7_MODE_SPECS } from "../lib/bc7/bc7Tables";
-import { Sparkles, Info, RefreshCw, CheckCircle2, ChevronRight, Layers, HelpCircle } from "lucide-react";
+import { Info, RefreshCw, CheckCircle2, ChevronRight, Layers, HelpCircle } from "lucide-react";
 
-interface BlockTexelInspectorProps {
-  onAnalyzeWithAI?: (decoded: DecodedBC7Block, origTexels: Uint8ClampedArray) => void;
-}
+interface BlockTexelInspectorProps {}
 
 // Preset 4x4 Blocks
 const PRESET_BLOCKS = [
@@ -78,14 +76,12 @@ const PRESET_BLOCKS = [
   },
 ];
 
-export const BlockTexelInspector: React.FC<BlockTexelInspectorProps> = ({ onAnalyzeWithAI }) => {
+export const BlockTexelInspector: React.FC<BlockTexelInspectorProps> = () => {
   const [selectedTexels, setSelectedTexels] = useState<Uint8ClampedArray>(PRESET_BLOCKS[0].texels);
   const [activeTexelIdx, setActiveTexelIdx] = useState<number | null>(0);
   const [hoveredBitField, setHoveredBitField] = useState<BitField | null>(null);
   const [hoveredTexelIdx, setHoveredTexelIdx] = useState<number | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
-  const [aiAnalysisText, setAiAnalysisText] = useState<string | null>(null);
-  const [loadingAI, setLoadingAI] = useState(false);
 
   // Encode 4x4 texels to 16-byte BC7 payload
   const encodedPayload = useMemo(() => {
@@ -115,38 +111,6 @@ export const BlockTexelInspector: React.FC<BlockTexelInspectorProps> = ({ onAnal
     const newTexels = new Uint8ClampedArray(selectedTexels);
     newTexels[activeTexelIdx * 4 + channel] = value;
     setSelectedTexels(newTexels);
-  };
-
-  // AI analysis request handler
-  const handleAIExplain = async () => {
-    setLoadingAI(true);
-    setAiAnalysisText(null);
-    try {
-      const res = await fetch("/api/gemini/explain-block", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          mode: decoded.mode,
-          partition: decoded.partition,
-          endpoints: decoded.endpoints,
-          pbits: decoded.pBits,
-          rotation: decoded.rotation,
-          indices: decoded.texelWeights,
-          texels: Array.from(selectedTexels),
-          psnr,
-        }),
-      });
-      const data = await res.json();
-      if (data.text) {
-        setAiAnalysisText(data.text);
-      } else {
-        setAiAnalysisText("无法获取 AI 分析。请确认 GEMINI_API_KEY 已配置。");
-      }
-    } catch (err: any) {
-      setAiAnalysisText(`请求失败: ${err.message}`);
-    } finally {
-      setLoadingAI(false);
-    }
   };
 
   const modeSpec = BC7_MODE_SPECS[decoded.mode];
@@ -389,28 +353,6 @@ export const BlockTexelInspector: React.FC<BlockTexelInspectorProps> = ({ onAnal
               <span className="font-semibold text-cyan-300">Mode {decoded.mode} 特性:</span>{" "}
               {modeSpec.description}
             </div>
-
-            {/* AI Explain Block Button */}
-            <button
-              onClick={handleAIExplain}
-              disabled={loadingAI}
-              className="w-full flex items-center justify-center space-x-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 py-2.5 text-xs font-bold text-white shadow-lg shadow-cyan-500/25 hover:from-cyan-500 hover:to-blue-500 transition disabled:opacity-50"
-            >
-              <Sparkles className="h-4 w-4" />
-              <span>{loadingAI ? "AI 正在剖析算法编码决策..." : "请求 Gemini AI 深度诊断此 4x4 块"}</span>
-            </button>
-
-            {aiAnalysisText && (
-              <div className="rounded-xl bg-slate-950 p-4 border border-cyan-500/30 text-xs text-slate-200 leading-relaxed space-y-2">
-                <div className="font-bold text-cyan-400 flex items-center gap-1.5">
-                  <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
-                  <span>Gemini AI 专家剖析报告</span>
-                </div>
-                <div className="whitespace-pre-wrap font-sans text-slate-300 text-[11px] leading-normal">
-                  {aiAnalysisText}
-                </div>
-              </div>
-            )}
           </div>
         </div>
 

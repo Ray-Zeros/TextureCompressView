@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import { Navbar, ViewTab } from "./components/Navbar";
 import { BlockTexelInspector } from "./components/BlockTexelInspector";
 import { ModeMatrixExplorer } from "./components/ModeMatrixExplorer";
-import { BitSandbox } from "./components/BitSandbox";
-import { AstcSandbox } from "./components/AstcSandbox";
-import { Cpu, ShieldCheck } from "lucide-react";
+import { UnifiedSandbox } from "./components/UnifiedSandbox";
+import { Cpu } from "lucide-react";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ViewTab>("inspector");
@@ -18,8 +17,7 @@ export default function App() {
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
         {activeTab === "inspector" && <BlockTexelInspector />}
         {activeTab === "matrix" && <ModeMatrixExplorer />}
-        {activeTab === "sandbox" && <BitSandbox />}
-        {activeTab === "astc" && <AstcSandbox />}
+        {activeTab === "sandbox" && <UnifiedSandbox />}
       </main>
 
       {/* Bottom Technical Footer */}
@@ -27,11 +25,11 @@ export default function App() {
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 sm:px-6">
           <div className="flex items-center space-x-2">
             <Cpu className="h-4 w-4 text-cyan-500" />
-            <span>BC7 / BPTC Texture Compression Engine &bull; 4 bpp (16 Bytes per 4x4 block)</span>
+            <span>BC7 & ASTC 128-Bit GPU 纹理压缩算法全景深度解析平台</span>
           </div>
           <div className="flex items-center space-x-4">
-            <span>DirectX 11 &bull; Vulkan BPTC</span>
-            <span>Google AI Studio Build &bull; Gemini 3.6 Flash</span>
+            <span>DirectX 11 &bull; Vulkan BPTC &bull; Khronos ASTC</span>
+            <span>Real-Time Graphics Lab</span>
           </div>
         </div>
       </footer>
